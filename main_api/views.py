@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from .models import *
-from .tts import *
+from .text_speech import *
 
 # from rest_framework.authtoken.models import Token
 
@@ -123,3 +123,25 @@ def get_categories(request):
         })
 
     return HttpResponse(json.dumps(result), content_type="application/json")
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def check_speech(request):
+    data = json.loads(request.body)
+
+    language = data['language']
+    audio_bytes = data['speech']
+    translations = data['translations']
+
+    result = False
+
+
+    speech_text = english_stt(audio_bytes) if language == 'english' else russian_stt(audio_bytes)
+
+    for translation in translations:
+        if speech_text == translation:
+            result = True
+            break
+
+    return HttpResponse(json.dumps({"result": result}), content_type="application/json")

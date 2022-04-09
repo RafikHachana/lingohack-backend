@@ -7,5 +7,6 @@ urlpatterns = [
     path('logout', views.logout_request, name='logout'),
     path('current_user', views.current_user, name="current_user"),
     path('get_categories', views.get_categories, name="get_categories"),
-    path('get_questions', views.get_questions, name="get_questions")
+    path('get_questions', views.get_questions, name="get_questions"),
+    path('check_speech', view=views.check_speech, name="check_speech")
 ]
