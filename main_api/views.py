@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from .models import *
+from .tts import *
 
 # from rest_framework.authtoken.models import Token
 
@@ -96,6 +97,11 @@ def get_questions(request):
                 Translation.objects.filter(russianText__Id=text.Id).select_related("englishText").all()))
 
         result.append(entry)
+
+    if mode == "speech":
+        for entry in result:
+            source_audio = english_tts(entry["source"]) if source_language == "english" else russian_tts(entry['source'])
+            entry['source_audio'] = source_audio
 
     return HttpResponse(json.dumps(result),content_type="application/json")
 
