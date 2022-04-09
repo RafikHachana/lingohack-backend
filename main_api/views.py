@@ -136,7 +136,7 @@ def check_speech(request):
     data = json.loads(request.body)
 
     language = data['language']
-    audio_bytes = data['speech']
+    audio_bytes = data['speech'].encode()
     translations = data['translations']
 
     result = False
