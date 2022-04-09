@@ -12,6 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
+from .models import *
+
 # from rest_framework.authtoken.models import Token
 
 
@@ -59,3 +61,59 @@ def current_user(request, format=None):
             'auth': None,  # None
         }
     return HttpResponse(json.dumps(content),content_type="application/json" )
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def get_questions(request):
+    data = json.loads(request.body)
+
+    number_of_questions = data.get('number_of_questions')
+    source_language = data['source_language']
+
+    # text or speech
+    mode = data['mode']
+
+    category_id = data['category_id']
+
+
+    text_source = Text.objects.filter(language=source_language, category__Id=category_id).order_by('?')[:number_of_questions]
+    # Joining the tables
+    result = []
+    for text in text_source:
+        entry = {
+            'source': str(text),
+
+            # If the source text is English
+            'translation': list(map(lambda x: str(x.russianText) if source_language=="english" else str(x.englishText), 
+                Translation.objects.filter(englishText__Id=text.Id).select_related("russianText").all()))
+        }
+
+        # If the source text is Russian
+        if source_language == 'russian':
+            entry['translation'] = list(map(lambda x: str(x.russianText) if source_language=="english" else str(x.englishText), 
+                Translation.objects.filter(russianText__Id=text.Id).select_related("englishText").all()))
+
+        result.append(entry)
+
+    return HttpResponse(json.dumps(result),content_type="application/json")
+
+
+
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def get_categories(request):
+    result = []
+    objects = Category.objects.all()
+
+    for i in objects:
+        result.append({
+            'id': str(i.Id),
+            'name': i.name
+        })
+
+    return HttpResponse(json.dumps(result), content_type="application/json")

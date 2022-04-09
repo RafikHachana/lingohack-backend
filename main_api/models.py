@@ -1,23 +1,14 @@
 from random import choices
+from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
 # from .managers import CustomUserManager
 
-# Create your models here.
-# class CustomUser(AbstractUser):
-#     username = None
-#     email = models.EmailField(_('email address'), unique=True)
-#     XP_points = models.PositiveIntegerField(default=0)  # integer,
-#     registrationDate = models.DateField(auto_now=True)  # date NOT NULL,
+class Category(models.Model):
+    Id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True, editable=False)
+    name = models.TextField()
 
-#     USERNAME_FIELD = 'email'
-#     REQUIRED_FIELDS = []
-
-#     objects = CustomUserManager()
-
-#     def __str__(self):
-#         return self.email
 
 class Text(models.Model):
     Id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True, editable=False)
@@ -32,6 +23,8 @@ class Text(models.Model):
     ]
 
     language = models.CharField(max_length=8, choices=AVAILABLE_LANGUAGES)
+
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return self.content
