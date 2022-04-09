@@ -186,3 +186,38 @@ def get_videos(request):
     result = Video.objects.filter(category__Id=category_id, accent__Id=accent_id).values()
 
     return HttpResponse(json.dumps(result), content_type="application/json")
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def get_accents(request):
+    result = []
+    objects = Accent.objects.all()
+
+    for i in objects:
+        result.append({
+            'id': str(i.Id),
+            'name': i.name
+        })
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def add_video(request):
+    data = json.loads(request.body)
+    
+    new_video = Video(
+        link=data['link'],
+        category=Category.objects.filter(Id=data['category_id'])[0],
+        accent=Accent.objects.filter(Id=data['accent_id'])[0],
+        description=data.get("description"),
+        speaker_name=data.get('speaker_name'),
+        title=data.get("title")
+
+    )
+
+    new_video.save()
+
+    return HttpResponse(json.dumps({"success": 1}), content_type="application/json")
