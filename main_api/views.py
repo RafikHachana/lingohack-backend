@@ -173,3 +173,16 @@ def predict_next_word(request):
     }
 
     return HttpResponse(json.dumps(result), content_type="application/json")
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def get_videos(request):
+    data = json.loads(request.body)
+    
+    accent_id = data.get("accent_id")
+    category_id = data.get("category_id")
+
+    result = Video.objects.filter(category__Id=category_id, accent__Id=accent_id).values()
+
+    return HttpResponse(json.dumps(result), content_type="application/json")

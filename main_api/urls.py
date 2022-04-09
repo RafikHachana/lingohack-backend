@@ -9,5 +9,6 @@ urlpatterns = [
     path('get_categories', views.get_categories, name="get_categories"),
     path('get_questions', views.get_questions, name="get_questions"),
     path('check_speech', view=views.check_speech, name="check_speech"),
-    path('get_next_word', views.predict_next_word, name="get_next_word")
+    path('get_next_word', views.predict_next_word, name="get_next_word"),
+    path("get_videos", views.get_videos, name="get_videos")
 ]

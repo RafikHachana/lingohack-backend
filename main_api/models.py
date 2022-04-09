@@ -1,4 +1,5 @@
 from random import choices
+from threading import activeCount
 from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -39,3 +40,16 @@ class Translation(models.Model):
     #         models.CheckConstraint(check=models.Q(englishText__language="english"), name="english_text"),
     #         models.CheckConstraint(check=models.Q(russianText__language="russian"), name="russian_text")
     #     ]
+
+class Accent(models.Model):
+    Id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True, editable=False)
+    name = models.TextField()
+
+class Video(models.Model):
+    Id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True, editable=False)
+    link = models.URLField()
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    accent = models.ForeignKey(Accent, on_delete=models.DO_NOTHING)
+    speaker_name = models.TextField()
+    title = models.TextField()
+    description = models.TextField()

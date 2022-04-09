@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Text, Translation
+from .models import Category, Text, Translation, Accent, Video
 
 # Register your models here.
 @admin.register(Text)
@@ -13,4 +13,12 @@ class TranslationAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Accent)
+class AccentAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
     pass
