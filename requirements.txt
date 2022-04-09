@@ -7,3 +7,6 @@ sqlparse==0.4.2
 pydub
 requests
 SpeechRecognition
+torch
+transformers
+numpy

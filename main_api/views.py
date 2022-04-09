@@ -15,9 +15,14 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from .models import *
 from .text_speech import *
 
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import numpy as np
+
 # from rest_framework.authtoken.models import Token
 
-
+tokenizer = AutoTokenizer.from_pretrained("gpt2")
+model = AutoModelForCausalLM.from_pretrained("gpt2")
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -145,3 +150,26 @@ def check_speech(request):
             break
 
     return HttpResponse(json.dumps({"result": result}), content_type="application/json")
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def predict_next_word(request):
+    data = json.loads(request.body)
+    sequence = data['text']
+    inputs = tokenizer(sequence, return_tensors="pt")
+    inputs_ids = inputs["inputs_ids"]
+    for id in inputs_ids[0]:
+        word = tokenizer.decode(id)
+
+    with torch.no_grad():
+        logits = model(**inputs).logits[:, -1, :]
+
+    predicted_id = torch.argmax(logits).item()
+    predicted_word = tokenizer.decode(predicted_id)
+    
+    result = {
+        "predicted_word" : predicted_word
+    }
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
