@@ -54,7 +54,7 @@ def logout_request(request):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def current_user(request, format=None):
     try:
         content = {
@@ -71,7 +71,7 @@ def current_user(request, format=None):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def get_questions(request):
     data = json.loads(request.body)
 
@@ -116,7 +116,7 @@ def get_questions(request):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def get_categories(request):
     result = []
     objects = Category.objects.all()
@@ -131,7 +131,7 @@ def get_categories(request):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def check_speech(request):
     data = json.loads(request.body)
 
@@ -153,7 +153,7 @@ def check_speech(request):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def predict_next_word(request):
     data = json.loads(request.body)
     sequence = data['text']
@@ -176,7 +176,7 @@ def predict_next_word(request):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def get_videos(request):
     data = json.loads(request.body)
     
@@ -189,7 +189,7 @@ def get_videos(request):
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def get_accents(request):
     result = []
     objects = Accent.objects.all()
@@ -204,7 +204,7 @@ def get_accents(request):
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def add_video(request):
     data = json.loads(request.body)
     
