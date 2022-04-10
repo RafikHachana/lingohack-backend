@@ -1,4 +1,5 @@
 import json
+import base64
 
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -106,7 +107,7 @@ def get_questions(request):
     if mode == "speech":
         for entry in result:
             source_audio = english_tts(entry["source"]) if source_language == "english" else russian_tts(entry['source'])
-            entry['source_audio'] = source_audio
+            entry['source_audio'] = base64.b64encode(source_audio).decode("utf-16")
 
     return HttpResponse(json.dumps(result),content_type="application/json")
 
@@ -136,7 +137,7 @@ def check_speech(request):
     data = json.loads(request.body)
 
     language = data['language']
-    audio_bytes = data['speech'].encode()
+    audio_bytes = data['speech'].encode("utf-16")
     translations = data['translations']
 
     result = False
